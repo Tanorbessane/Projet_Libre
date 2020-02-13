@@ -1,0 +1,76 @@
+﻿@model IEnumerable<App.Models.File>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<div class="main">
+    <!-- MAIN CONTENT -->
+    <div class="main-content">
+        <div class="container-fluid">
+            <!-- OVERVIEW -->
+            <div class="panel panel-headline">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Liste des fichiers</h3>
+                    <p>
+                        <a asp-action="Create">Nouveau fichier</a>
+                    </p>
+                </div>
+                <div class="panel-body">
+                    <div class="row">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>
+                                        @Html.DisplayNameFor(model => model.Nom)
+                                    </th>
+                                    @*<th>
+                                        @Html.DisplayNameFor(model => model.Path)
+                                    </th>*@
+                                    <th>
+                                        @Html.DisplayNameFor(model => model.Type)
+                                    </th>
+                                    <th>
+                                        @Html.DisplayNameFor(model => model.DateCreation)
+                                    </th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model)
+                                {
+                                    <tr>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Nom)
+                                        </td>
+                                        @*<td>
+                                            @Html.DisplayFor(modelItem => item.Path)
+                                        </td>*@
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Type)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.DateCreation)
+                                        </td>
+                                        <td>
+                                            <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                                            <a asp-action="Details" asp-route-id="@item.Id">Details</a>|
+                                            <a asp-action="Ouvrir" asp-route-id="@item.Id">Ouvrir</a> |
+                                            <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <!-- END OVERVIEW -->
+        </div>
+    </div>
+    <!-- END MAIN CONTENT -->
+</div>
+
+
+
+

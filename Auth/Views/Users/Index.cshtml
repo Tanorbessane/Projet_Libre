@@ -1,0 +1,150 @@
+﻿@model IEnumerable<App.Models.Users>
+
+@{
+    ViewData["Title"] = "Users";
+    var getlist = ViewBag.Groups as IEnumerable<App.Models.Groups>;
+}
+
+
+<div class="main">
+    <!-- MAIN CONTENT -->
+    <div class="main-content">
+        <div class="container-fluid">
+            <!-- OVERVIEW -->
+            <div class="panel panel-headline">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Liste des utilisateurs</h3>
+                    <p>
+                        <a asp-action="Create">Nouveau utilisateur</a>
+                    </p>
+                </div>
+                <div class="panel-body">
+                    <div class="row">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    @*<th>
+                                            @Html.DisplayNameFor(model => model.UserId)
+                                        </th>*@
+                                    <th>
+                                        @Html.DisplayNameFor(model => model.UserName)
+                                    </th>
+                                    <th>
+                                        @Html.DisplayNameFor(model => model.Email)
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model)
+                                {
+                                    <tr>
+                                        @*<td>
+                                                @Html.DisplayFor(modelItem => item.UserId)
+                                            </td>*@
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.UserName)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Email)
+                                        </td>
+                                        @*<td>
+                                                @Html.DisplayFor(modelItem => item.role)
+                                            </td>*@
+                                        <td>
+                                            <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                                            <a asp-action="Details" asp-route-id="@item.Id">Details</a>|
+                                            <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <!-- END OVERVIEW -->
+            <div class="panel panel-headline">
+                <div class="panel-heading">
+                    <h3>Listes des groupes</h3>
+                    <p>
+                        <a asp-action="CreateGroup">Creer un groupe</a>
+                    </p>
+                </div>
+                <div class="panel-body">
+                      <div class="row">
+                            <input class="form-control" id="InptSearch" type="text" placeholder="Rechercher un groupe..">
+                            <br />
+                            <ul class="list-group" id="listGroup">
+                                @foreach (var item in getlist)
+                                {
+                                    <li class="list-group-item">
+                                        <p>
+                                            <span style="visibility:hidden">@item.Id</span>
+                                            <span class="badge badge-primary">  @item.Users.Count()</span> @item.Nom
+                                            <span class="close" onclick="$('#idGroups').val(@item.Id);" data-toggle="modal" data-target="#myModal" id="ModalDeleteGroup">&times;</span>
+                                        </p>
+                                    </li>
+                                }
+                            </ul>
+                        </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="myModal" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Modal Header</h4>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="idGroups" />
+                <div class="form-group">
+                    <h2>Voulez-vous supprimer le groupe ainsi que toutes ses liaisons de projets  ?</h2>
+                </div>
+                <div class="form-group">
+                    <input type="button" value="Save" class="btn btn-default" id="btnModalDeleteGroup" />
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+
+
+
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $("#InptSearch").on("keyup", function () {
+                var value = $(this).val().toLowerCase();
+                $("#listGroup li").filter(function () {
+                    $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1);
+                });
+            });
+
+            $('#btnModalDeleteGroup').on("click", function () {
+                var id = $('#idGroups').val();
+               $.ajax({
+                 type: "POST",
+                   url: '@Url.Action("DeleteGroup", "User")' + '?id=' + id,
+                 contentType: "application/json; charset=utf-8",
+                 dataType: "html",
+                 success: function (data) {
+                 alert("here" + data.d.toString());
+                 }
+                });
+            });
+        });
+
+
+    </script>
+}

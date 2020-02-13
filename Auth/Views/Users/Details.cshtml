@@ -1,0 +1,54 @@
+﻿@model App.Models.Users
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<div class="main">
+    <!-- MAIN CONTENT -->
+    <div class="main-content">
+        <div class="container-fluid">
+            <!-- OVERVIEW -->
+            <div class="panel panel-headline">
+                <div class="panel-heading">
+                    <h2>Edit</h2>
+                    <h4>Utilisateurs</h4>
+                </div>
+                <div class="panel-body">
+                    <dl class="dl-horizontal">
+                        <dt>
+                            @Html.DisplayNameFor(model => model.Id)
+                        </dt>
+                        <dd>
+                            @Html.DisplayFor(model => model.Id)
+                        </dd>
+                        <dt>
+                            @Html.DisplayNameFor(model => model.UserName)
+                        </dt>
+                        <dd>
+                            @Html.DisplayFor(model => model.UserName)
+                        </dd>
+                        <dt>
+                            @Html.DisplayNameFor(model => model.Email)
+                        </dt>
+                        <dd>
+                            @Html.DisplayFor(model => model.Email)
+                        </dd>
+                        <dt>
+                            @Html.DisplayNameFor(model => model.role)
+                        </dt>
+                        <dd>
+                            @Html.DisplayFor(model => model.role)
+                        </dd>
+                    </dl>
+                    <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
+                    <a asp-action="Index">Back to List</a>
+                    <!-- END OVERVIEW -->
+                </div>
+            </div>
+            <!-- END MAIN CONTENT -->
+        </div>
+    </div>
+</div>
+
+

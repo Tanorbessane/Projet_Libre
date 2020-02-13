@@ -1,0 +1,85 @@
+﻿@model App.Models.Users
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+
+<div class="main">
+    <!-- MAIN CONTENT -->
+    <div class="main-content">
+        <div class="container-fluid">
+            <!-- OVERVIEW -->
+            <div class="panel panel-headline">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Creer un utilisateur</h3>
+                </div>
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <form asp-action="Create">
+                                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                                    <input type="hidden" asp-for="Id" />
+                                    <div class="form-group">
+                                        <label asp-for="UserName" class="control-label"></label>
+                                        <input asp-for="UserName" id="username" class="form-control" />
+                                        <span asp-validation-for="UserName" class="text-danger"></span>
+                                    </div>
+                                    <div class="form-group">
+                                        <label asp-for="Email" class="control-label"></label>
+                                        <input asp-for="Email" id="email" class="form-control" />
+                                        <span asp-validation-for="Email" class="text-danger"></span>
+                                    </div>
+                                    <div class="form-group">
+                                        <label asp-for="role" class="control-label"></label>
+                                        <input asp-for="role" class="form-control" />
+                                        <span asp-validation-for="role" class="text-danger"></span>
+                                    </div>
+                                    <div class="form-group">
+                                        <input type="button" value="Create" id="btnSave" class="btn btn-default" />
+                                    </div>
+                                </form>
+                            </div>
+                    </div>
+
+                    <div>
+                        <a asp-action="Index">Back to List</a>
+                    </div>
+
+                </div>
+            </div>
+            <!-- END OVERVIEW -->
+        </div>
+    </div>
+    <!-- END MAIN CONTENT -->
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+    <script>
+
+        $("#btnSave").on("click", function () {
+
+            var sendingData = {
+                username: $("#username").val(),
+                email: $("#email").val() 
+            }
+
+            $.ajax({
+                url: 'https://localhost:44395/api/user ',
+                method: 'POST',
+                type: 'json',
+                data: sendingData,
+                success: function (response) {
+                    console.log(response);
+                    window.location.href = '@Url.Action("Index", "Users")';
+                },
+                error: function (error) {
+                    console.log(error);
+                    window.location.href = '@Url.Action("Index", "Users")';
+                }
+            });
+        });
+    </script>
+}

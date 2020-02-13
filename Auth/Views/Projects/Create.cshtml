@@ -1,0 +1,198 @@
+﻿@model App.Models.Projet
+
+@{
+    ViewData["Title"] = "Create";
+    var getlist = ViewBag.lstUsers as IEnumerable<App.Models.Users>;
+    var getlistFiles = ViewBag.lstFiles as IEnumerable<App.Models.File>;
+}
+
+
+
+<div class="main">
+    <!-- MAIN CONTENT -->
+    <div class="main-content">
+        <div class="container-fluid">
+            <div style="margin-bottom:5px;">
+                <a asp-action="Index"> ← Liste des projets</a>
+            </div>
+            <!-- OVERVIEW -->
+            <div class="panel panel-headline">
+                <div class="panel-heading">
+
+                    <h3 class="panel-title">Creer un projet</h3>
+                </div>
+                <div class="panel-body">
+                        <div class="row">
+                            <div class="col-md-6">
+
+                                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                                <div class="form-group">
+                                    <label asp-for="Nom" class="control-label"></label>
+                                    <input asp-for="Nom" class="form-control" id="nom" />
+                                    <span asp-validation-for="Nom" class="text-danger"></span>
+                                </div>
+                                <div class="form-group">
+                                    <label asp-for="Description" class="control-label"></label>
+                                    <input asp-for="Description" class="form-control" id="description" />
+                                    <span asp-validation-for="Description" class="text-danger"></span>
+                                </div>
+                                <div class="form-group">
+                                    <label asp-for="LstUtilisateurs" class="control-label">Team :</label>
+                                    <input class="form-check-input" type="checkbox" id="checkbox_users" style="float:right;">
+                                    <label class="form-check-label" for="gridCheck" style="float:right; margin-right:5px;">
+                                        Select All
+                                    </label>
+                                    <select class="select-users form-control" name="states[]" multiple="multiple">
+                                        @foreach (var x in getlist)
+                                        {
+                                            <option value="@x.Id">@x.UserName </option>
+                                        }
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label asp-for="LstFile">Fichiers :</label>
+                                    <input class="form-check-input" type="checkbox" id="checkbox_files" style="float:right;">
+                                    <label class="form-check-label" for="gridCheck" style="float:right; margin-right:5px;">
+                                        Select All
+                                    </label>
+                                    <select  class="select-files form-control" name="files[]" multiple="multiple">
+                                        @foreach (var x in getlistFiles)
+                                        {
+                                            <option value="@x.Id">@x.Nom </option>
+                                        }
+                                    </select>
+                                </div>
+
+                            </div>
+                            <div class="col-md-6">
+                                <h2>TodoList </h2>
+                                <input type="text"  placeholder="Tâche" class="form-control inptTitleTodo" style="width:80%; margin-bottom:5px;" />
+                                <div class="form-inline">
+                                    <textarea  class="form-control inptTaskTodo" placeholder="Description de la tâche" style="width:90%;" rows="3"></textarea>
+                                    <button class="btn" id="btnAddTask" style="margin-top: 32px;"><i class="fa fa-plus-square"></i></button>
+                                </div>
+                                <ul class="list-unstyled todo-list"></ul>
+                            </div>
+                        </div>                     
+                        <div>
+                            <input type="button" value="Create" id="btnSubmit" class="btn btn-success btn-lg pull-right" />
+                        </div>
+                </div>
+            </div>
+            <!-- END OVERVIEW -->
+        </div>
+    </div>
+    <!-- END MAIN CONTENT -->
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            /*Declaration des select2*/
+            $('.select-users').select2();
+            $('.select-files').select2();
+        });
+
+
+        TabTask = new Array(50);
+        var i = 0;
+
+        /*Select/unselect team*/
+        $("#checkbox_users").click(function () {
+            if ($("#checkbox_users").is(':checked') == true) {
+                $(".select-users > option").prop("selected", "selected");
+                $(".select-users").trigger("change");
+            } else {
+                $(".select-users").val('').trigger("change");
+            }
+        });
+
+        function do_task(Tache, description) {
+            this.Tache = Tache;
+            this.description = description;
+        }
+
+        /*Select/unselect files*/
+        $("#checkbox_files").click(function () {
+            if ($("#checkbox_files").is(':checked') == true) {
+                $(".select-files > option").prop("selected", "selected");
+                $(".select-files").trigger("change");
+            } else {
+                $(".select-files").val('').trigger("change");
+            }
+        });
+
+        /*Ajouer une tache*/
+        $("#btnAddTask").on("click", function () {
+            var title_todo = $(".inptTitleTodo").val();
+            var todo_task = $(".inptTaskTodo").val();
+            var code = '<li class="task">';
+            code += ' <label class="control-inline fancy-checkbox" >';
+            code += ' <input type="checkbox"><span></span>';
+            code += ' </label>';
+            code += ' <p>';
+            code += ' <strong class="titleTask" >' + title_todo + '</strong>';
+            code += ' <span class="short-description">' + todo_task + '</span>';
+            code += ' <span class="date">' + Date.now() + ' </span>';
+            code += ' </p>';
+            code += ' <div class="controls">';
+            code += ' <a href="#"><i class="icon-software icon-software-pencil"></i></a> <a href="#"><i class="icon-arrows icon-arrows-circle-remove"></i></a>';
+            code += ' </div>';
+            code += ' </li >';
+            $(".todo-list").append(code);
+
+            TabTask[i] = new do_task(title_todo, todo_task, Date.now());
+            i++;
+        });
+
+        $("#btnSubmit").on("click", function () {
+                 
+           var nbTask = $('.titleTask').length;
+
+            function Projet(Nom, Description, Date) {
+                this.Nom = Nom;
+                this.Description = Description;
+                this.Date = Date;
+            }
+
+            function do_task(Tache, description) {
+                this.Tache = Tache;
+                this.description = description;
+            }
+
+            TabTask = new Array(nbTask)
+            for (var i = 0; i < nbTask; i++) {
+                TabTask[i] = new do_task($('.titleTask')[i].textContent, $('.short-description')[i].textContent);
+            }
+
+            TabUsers = $(".select-users").val();
+            TabFiles = $(".select-filess").val();
+           
+            var project = {
+                Nom: $("#nom").val(),
+                Description: $("#description").val(),
+                states: TabUsers,
+                files: TabFiles ,
+                task: TabTask 
+            };
+
+            console.log(project);
+
+            $.ajax({
+                url: "@Url.Action("Create", "Projects")",
+                type: "POST",
+                dataType: "json",
+                data: project,
+                success: function (response) {
+                    response ? alert("It worked!") : alert("It didn't work.");
+                }
+            });
+        });
+
+    
+    </script>
+
+}

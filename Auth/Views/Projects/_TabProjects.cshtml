@@ -1,0 +1,75 @@
+﻿@using PagedList.Core.Mvc;
+@model PagedList.Core.PagedList<App.Models.Projet>
+<div class="row">
+    <table class="table table-hover">
+        <thead>
+            <tr>
+              
+                <th>
+                    @Html.ActionLink("Nom", "Index", new { sortOrder = ViewBag.NameSortParm, currentFilter = ViewBag.CurrentFilter })
+                </th>
+                <th>
+                    @Html.ActionLink("Description", "Index", new { sortOrder = ViewBag.DateSortParm, currentFilter = ViewBag.CurrentFilter })
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Nom)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Description)
+                    </td>
+                    <td>
+                        @if (Convert.ToInt32(@item.Progress.Split('%')[0]) <= Convert.ToInt32("50"))
+                        {
+                            <div class="progress">
+                                <div class="progress-bar progress-bar-danger " role="progressbar" aria-valuenow="@item.Progress.Split('%')[0]" aria-valuemin="0" aria-valuemax="100" style="width: @item.Progress">
+                                    <span class="sr-only">@Html.DisplayFor(modelItem => item.Progress) Complete (warning)</span>
+                                </div>
+                            </div>
+                        }
+                        else if (Convert.ToInt32(@item.Progress.Split('%')[0]) <= Convert.ToInt32("90"))
+                        {
+                            <div class="progress">
+                                <div class="progress-bar progress-bar-warning " role="progressbar" aria-valuenow="@item.Progress.Split('%')[0]" aria-valuemin="0" aria-valuemax="100" style="width: @item.Progress">
+                                    <span class="sr-only">@Html.DisplayFor(modelItem => item.Progress) Complete (warning)</span>
+                                </div>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="progress">
+                                <div class="progress-bar progress-bar-success " role="progressbar" aria-valuenow="@item.Progress.Split('%')[0]" aria-valuemin="0" aria-valuemax="100" style="width: @item.Progress">
+                                    <span class="sr-only">@Html.DisplayFor(modelItem => item.Progress) Complete (warning)</span>
+                                </div>
+                            </div>
+                        }
+                    </td>
+                    <td>
+                        <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                        <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                        <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                    </td>
+                </tr>
+            }
+
+        </tbody>
+       
+        @using (Html.BeginForm())
+            {
+                <p>
+                    Find by name: @Html.TextBox("SearchString", ViewBag.CurrentFilter as string)
+                    <input type="submit" value="Search" />
+                </p>
+            }
+
+    </table>
+    <div id="navbar-menu" style="text-align:left">
+        <pager class="pagination" list="@Model" options="@PagedListRenderOptions.TwitterBootstrapPager" asp-action="Index" asp-controller="Projects" asp-route-addtional-param="Additional-Param-Value" />
+    </div>
+</div>

@@ -1,0 +1,93 @@
+﻿@model App.Models.Projet
+
+@{
+    ViewData["Title"] = "Details";
+    var getlist = ViewBag.lstUsers as IEnumerable<App.Models.Users>;
+    var getlistFiles = ViewBag.lstFiles as IEnumerable<App.Models.File>;
+    var getlistTask = ViewData["lstTasks"] as IEnumerable<App.Models.Task>;
+}
+
+<div class="main">
+    <!-- MAIN CONTENT -->
+    <div class="main-content">
+        <div class="container-fluid">
+            <!-- OVERVIEW -->
+            <div class="panel panel-headline">
+                <div class="panel-heading">
+                    <h2>Details</h2>
+                    <h4>Project</h4>
+
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <dl class="dl-horizontal">
+                            <dt>
+                                @Html.DisplayNameFor(model => model.Nom)
+                            </dt>
+                            <dd>
+                                @Html.DisplayFor(model => model.Nom)
+                            </dd>
+                            <dt>
+                                @Html.DisplayNameFor(model => model.Description)
+                            </dt>
+                            <dd>
+                                @Html.DisplayFor(model => model.Description)
+                            </dd>
+                            <dt>
+                                @Html.DisplayNameFor(model => model.Date)
+                            </dt>
+                            <dd>
+                                @Html.DisplayFor(model => model.Date)
+                            </dd>
+                            <dt>
+                                Team
+                            </dt>
+                            <dd>
+                                <ul>
+                                    @foreach (var x in getlist)
+                                    {
+                                        <li>@x.UserName</li>
+                                    }
+                                </ul>
+                            </dd>
+                            <dt>
+                                Fichiers
+                            </dt>
+                            <dd>
+                                <ul>
+                                    @foreach (var x in getlistFiles)
+                                    {
+                                        <li>@x.Nom</li>
+                                    }
+                                </ul>
+                            </dd>
+                        </dl>
+                    </div>
+                    <div class="col-md-6">
+                        <h2> TodoList </h2>
+                        <ul class="list-unstyled todo-list">
+                            @foreach (var item in getlistTask) {
+                            <li>
+                                <label class="control-inline fancy-checkbox">
+                                    <input type="checkbox"><span></span>
+                                </label>
+                                <p>
+                                    <span class="title">@item.Tache</span>
+                                    <span class="short-description">@item.Description  </span>                                    
+                                </p>
+                                <div class="controls">
+                                    <a href="#"><i class="icon-software icon-software-pencil"></i></a> <a href="#"><i class="icon-arrows icon-arrows-circle-remove"></i></a>
+                                </div>
+                            </li>
+                            }
+                        </ul>
+                    </div>
+                    </div>
+                    <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
+                    <a asp-action="Index">Back to List</a>
+                    <!-- END OVERVIEW -->
+                </div>
+        </div>
+        <!-- END MAIN CONTENT -->
+    </div>
+</div>

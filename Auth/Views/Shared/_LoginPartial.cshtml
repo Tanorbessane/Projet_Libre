@@ -1,0 +1,42 @@
+﻿@using Microsoft.AspNetCore.Identity
+
+@inject SignInManager<IdentityUser> SignInManager
+@inject UserManager<IdentityUser> UserManager
+
+@if (SignInManager.IsSignedIn(User))
+{
+    <form asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })" method="post" id="logoutForm" class="navbar-right">
+        <ul class="nav navbar-nav navbar-right">
+            <li class="dropdown">
+                <a href="#" class="dropdown-toggle icon-menu" data-toggle="dropdown">
+                    <i class="lnr lnr-alarm"></i>
+                    <span class="badge bg-danger">5</span>
+                </a>
+                <ul class="dropdown-menu notifications">
+                    <li><a href="#" class="notification-item"><span class="dot bg-warning"></span>System space is almost full</a></li>
+                    <li><a href="#" class="notification-item"><span class="dot bg-danger"></span>You have 9 unfinished tasks</a></li>
+                    <li><a href="#" class="notification-item"><span class="dot bg-success"></span>Monthly report is available</a></li>
+                    <li><a href="#" class="notification-item"><span class="dot bg-warning"></span>Weekly meeting in 1 hour</a></li>
+                    <li><a href="#" class="notification-item"><span class="dot bg-success"></span>Your request has been approved</a></li>
+                    <li><a href="#" class="more">See all notifications</a></li>
+                </ul>
+            </li>
+            <li class="dropdown">
+                @*<a asp-area="Identity" asp-page="/User/Profile/Index" title="Manage">Hello @UserManager.GetUserName(User)!</a>*@
+                <a href='@Url.Action("Profile", "Users",new { id = @UserManager.GetUserId(User) })' class="navbar-link" >@UserManager.GetUserName(User)</a>
+            </li>
+            <li class="dropdown">
+                <a href="#" onclick="$(this).closest('form').submit()" class="navbar-link">Logout</a>
+
+                @*<button type="submit" class="btn btn-link navbar-btn navbar-link" style="visibility:hidden">Logout</button>*@
+            </li>
+        </ul>
+    </form>
+}
+else
+{
+    <ul class="nav navbar-nav navbar-right">
+        <li><a asp-area="Identity" asp-page="/Account/Register">Register</a></li>
+        <li><a asp-area="Identity" asp-page="/Account/Login">Login</a></li>
+    </ul>
+}
